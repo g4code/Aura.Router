@@ -4,7 +4,7 @@ namespace Aura\Router;
 /**
  * Test class for Map.
  */
-class MapTest extends \PHPUnit_Framework_TestCase
+class MapTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Map
@@ -12,10 +12,15 @@ class MapTest extends \PHPUnit_Framework_TestCase
     protected $map;
 
     /**
+     * @var array
+     */
+    protected $server;
+
+    /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->map = $this->newMap();
@@ -31,7 +36,7 @@ class MapTest extends \PHPUnit_Framework_TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
@@ -82,7 +87,7 @@ class MapTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
         
-        $this->setExpectedException('Aura\Router\Exception\UnexpectedType');
+        $this->expectException(\Aura\Router\Exception\UnexpectedType::class);
         $this->map->match('/', $this->server);
     }
     
@@ -645,7 +650,7 @@ class MapTest extends \PHPUnit_Framework_TestCase
         
         // fail to match again, for code coverage of the portion that checks
         // if there are definitions left to convert
-        $this->setExpectedException('Aura\Router\Exception\RouteNotFound');
+        $this->expectException(\Aura\Router\Exception\RouteNotFound::class);
         $actual = $this->map->generate('no-route-again');
     }
     
@@ -672,7 +677,7 @@ class MapTest extends \PHPUnit_Framework_TestCase
         ]);
         
         // fail to match
-        $this->setExpectedException('Aura\Router\Exception\RouteNotFound');
+        $this->expectException(\Aura\Router\Exception\RouteNotFound::class);
         $actual = $this->map->generate('no-route');
     }
     
@@ -871,7 +876,7 @@ class MapTest extends \PHPUnit_Framework_TestCase
         
         // append after matching
         $route = $this->map->match('/', $this->server);
-        $this->setExpectedException('Aura\Router\Exception');
+        $this->expectException(\Aura\Router\Exception::class);
         $this->map->appendMap($append_map);
     }
     
@@ -889,7 +894,7 @@ class MapTest extends \PHPUnit_Framework_TestCase
         
         // prepend after matching
         $route = $this->map->match('/', $this->server);
-        $this->setExpectedException('Aura\Router\Exception');
+        $this->expectException(\Aura\Router\Exception::class);
         $this->map->prependMap($prepend_map);
     }
 }

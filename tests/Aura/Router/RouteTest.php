@@ -4,7 +4,7 @@ namespace Aura\Router;
 /**
  * Test class for Route.
  */
-class RouteTest extends \PHPUnit_Framework_TestCase
+class RouteTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RouteFactory
@@ -12,10 +12,15 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     protected $factory;
 
     /**
+     * @var array
+     */
+    protected $server;
+
+    /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->factory = new RouteFactory;
@@ -26,7 +31,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
     }
@@ -63,6 +68,18 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         
         // wrong path
         $this->assertFalse($route->isMatch('/zim/dib/gir', $this->server));
+    }
+    
+    public function testIsMatchOnNullPath()
+    {
+        $route = $this->factory->newInstance([
+            'path' => '/foo/bar/baz',
+        ]);
+        
+        // a deprecation raised here fails the test (failOnDeprecation in phpunit.xml)
+        $actual = $route->isMatch(null, $this->server);
+        
+        $this->assertFalse($actual);
     }
     
     public function testIsMatchOnDynamicPath()
@@ -315,11 +332,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         return false;
     }
     
-    /**
-     * @expectedException \Aura\Router\Exception
-     */
     public function testBadSubpattern()
     {
+        $this->expectException(\Aura\Router\Exception::class);
+        
         $route = $this->factory->newInstance([
             'path' => '/{:controller}',
             'params' => [
