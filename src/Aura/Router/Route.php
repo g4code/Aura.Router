@@ -361,7 +361,7 @@ class Route
      * @return string
      * 
      */
-    public function generate(array $data = null)
+    public function generate(?array $data = null)
     {
         // use a callable to modify the path data?
         if ($this->generate) {
@@ -375,7 +375,7 @@ class Route
         foreach ($data as $key => $val) {
             // Closures can't be cast to string
             if (! ($val instanceof Closure)) {
-                $replace["{:$key}"] = rawurlencode($val);
+                $replace["{:$key}"] = rawurlencode($val ?? '');
             }
         }
         return strtr($this->path, $replace);
@@ -462,7 +462,8 @@ class Route
     protected function isRegexMatch($path)
     {
         $regex = "#^{$this->regex}$#";
-        $match = preg_match($regex, $path, $this->matches);
+        // cast: a null path (e.g. from parse_url() on a malformed URI) is deprecated in preg_match() on PHP 8.1+
+        $match = preg_match($regex, (string) $path, $this->matches);
         if (! $match) {
             $this->debug[] = 'Not a regex match.';
         }

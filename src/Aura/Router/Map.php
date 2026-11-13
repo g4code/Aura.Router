@@ -120,7 +120,7 @@ class Map
      * @return void
      * 
      */
-    public function add($name, $path, array $spec = null)
+    public function add($name, $path, ?array $spec = null)
     {
         $spec = (array) $spec;
 
